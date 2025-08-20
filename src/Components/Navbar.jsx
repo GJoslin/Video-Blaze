@@ -40,9 +40,9 @@ const Navbar = ({ user }) => {
           gap: "5px",
           fontWeight: "bold",
         }}
-        href="https://github.com/Killshotxd"
+        href="https://github.com/GJoslin"  // Replace with your actual GitHub
       >
-        <IoLogoGithub fontSize={40} /> Killshotxd
+        <IoLogoGithub fontSize={40} /> Video Blaze
       </a>
 
       {/* <Link to={"/"}>

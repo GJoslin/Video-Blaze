@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "fir-auth-b1867"
-  }
+    "default": "video-blaze"
+  },
+  "targets": {},
+  "etags": {}
 }

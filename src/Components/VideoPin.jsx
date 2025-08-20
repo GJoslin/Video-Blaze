@@ -24,6 +24,7 @@ const VideoPin = ({ data }) => {
 
   const [userId, setUserId] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     if (data) setUserId(data.userId);
@@ -32,6 +33,15 @@ const VideoPin = ({ data }) => {
         setUserInfo(data);
       });
   }, [userId]);
+
+  const handleVideoError = (e) => {
+    console.error("Video loading error:", e);
+    setVideoError(true);
+  };
+
+  const handleVideoLoad = () => {
+    setVideoError(false);
+  };
 
   return (
     <Flex
@@ -47,12 +57,46 @@ const VideoPin = ({ data }) => {
       maxWidth={"300px"}
     >
       <Link to={`/videoDetail/${data?.id}`}>
-        <video
-          src={data.videoUrl}
-          muted
-          onMouseOver={(e) => e.target.play()}
-          onMouseOut={(e) => e.target.pause()}
-        />
+        {!videoError ? (
+          <video
+            src={data?.videoUrl}
+            muted
+            onMouseOver={(e) => {
+              e.target.currentTime = 0;
+              e.target.play().catch(console.error);
+            }}
+            onMouseOut={(e) => {
+              e.target.pause();
+              e.target.currentTime = 0;
+            }}
+            onError={handleVideoError}
+            onLoadedData={handleVideoLoad}
+            preload="metadata"
+            style={{
+              width: "100%",
+              height: "200px",
+              objectFit: "cover"
+            }}
+          >
+            Your browser does not support the video tag.
+          </video>
+        ) : (
+          <Flex
+            width="300px"
+            height="200px"
+            bg="gray.200"
+            alignItems="center"
+            justifyContent="center"
+            direction="column"
+          >
+            <Text color="gray.600" fontSize="14px" textAlign="center">
+              Video unavailable
+            </Text>
+            <Text color="gray.500" fontSize="12px" mt={2}>
+              {data?.title || "No title"}
+            </Text>
+          </Flex>
+        )}
       </Link>
       <Flex
         position={"absolute"}
@@ -69,7 +113,7 @@ const VideoPin = ({ data }) => {
           alignItems={"center"}
         >
           <Text color={textColor} fontSize={20}>
-            {data.title}
+            {data?.title}
           </Text>
 
           <Link to={`/userDetail/${userId}`}>
@@ -87,7 +131,7 @@ const VideoPin = ({ data }) => {
           </Link>
         </Flex>
         <Text fontSize={12} color={textColor} ml="auto">
-          {moment(new Date(parseInt(data.id)).toISOString()).fromNow()}
+          {moment(new Date(parseInt(data?.id)).toISOString()).fromNow()}
         </Text>
       </Flex>
     </Flex>
